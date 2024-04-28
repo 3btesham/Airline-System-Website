@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Customer Dashboard</title>
+        <style type="text/css">
+            table, th, td {
+                border: 1px solid black;
+                padding-left: 2px;
+                padding-right: 2px;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Welcome, {{ customer['first_name'] }}</h1>
+
+        <a href="/view_customer_flights.html"> View My Flights </a>
+        <br></br>
+        <a href="/search_for_a_flight.html"> Search for a flight </a>
+        <br></br>
+        <a href="/purchase_ticket.html"> Purchase a Ticket </a>
+        <br></br>
+        <a href="/cancel_trip.html"> Cancel a Trip </a>
+        <br></br>
+        <a href="/review_flights"> Review a Flight </a>
+        
+        <br></br><br></br><br></br>
+        <b>Track My Spending:</b><br><br>
+
+        <!-- Total spending in the past year -->
+        <p>Total amount spent in the past year: <span>{{ spendings_past_year }}</span></p>
+        
+        <!-- Spending within a specified range -->
+        <form action="/spending_range" method="POST">
+            <label for="start_date">Start Date:</label>
+            <input type="date" id="start_date" name="start_date">
+            <label for="end_date">End Date:</label>
+            <input type="date" id="end_date" name="end_date">
+            <input type="submit" value="View Spending">
+        </form>
+        
+        <!-- Visualization for spending within the specified range (e.g., bar chart or table) -->
+        
+        <!-- JavaScript to fetch and update spending data -->
+        <script>
+            function fetchPastYearSpending() {
+                // Fetch total spending in the past year
+                fetch('/get_past_year_spending')
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById('past_year_spending').textContent = '$' + data.spendings;
+                    })
+                    .catch(error => console.error('Error fetching spending:', error));
+            }
+        
+            // Call the function when the page loads
+            fetchPastYearSpending();
+        </script>
+
+    </body>
+
+</html>
