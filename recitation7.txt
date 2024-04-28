@@ -1,0 +1,21 @@
+1. state, IR, MDR, A, B, pc.
+
+2. 
+a. 
+    WEpc = 1
+    MUXpcIncr = 1
+    MUXpc = 1
+b.
+    WEreg = 1
+    MUXr1 = 1
+    MUXtgt = 1
+
+c.
+    MUXaddr = 1
+    WEram = 1
+
+3
+a. 0,1,4,7,14
+b. 0,1,3,5,8
+c. 0,1,3,7,10
+d. 0,2,4,7,13
