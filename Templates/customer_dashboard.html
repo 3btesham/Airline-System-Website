@@ -12,22 +12,47 @@
     </head>
     <body>
         <h1>Welcome, {{ customer['first_name'] }}</h1>
-
-        <a href="/view_customer_flights.html"> View My Flights </a>
-        <br></br>
-        <a href="/search_for_a_flight.html"> Search for a flight </a>
-        <br></br>
+        <h2>View My flights</h2>
+        <table>
+            {%for flights in future_flights%}
+            <tr>
+                <td>{{ flight['flight_number'] }}</td>
+                <td>{{ flight['depart_date'] }}</td>
+                <td>{{ flight['depart_time'] }}</td>
+                <td>{{ flight['depart_airport_code'] }}</td>
+            </tr>
+        </table>
+        <h2>Purchase a Ticket</h2>
         <a href="/purchase_ticket.html"> Purchase a Ticket </a>
         <br></br>
         <a href="/cancel_trip.html"> Cancel a Trip </a>
         <br></br>
         <a href="/review_flights"> Review a Flight </a>
-        
-        <br></br><br></br><br></br>
+        <br></br>   <br></br>
+        <b>Search Flights:</b><br><br>
+
+        <form action="/search_flights" method="get"> 
+            <label for="source">Source City/Airport:</label>
+            <input type="text" id="source" name="source" required><br><br>
+
+            <label for="destination">Destination City/Airport:</label>
+            <input type="text" id="destination" name="destination" required><br><br>
+
+            <label for="departure-date">Departure Date:</label>
+            <input type="date" id="departure-date" name="departure_date" required><br><br>
+
+            <label for="return-date">Return Date(Optional):</label>
+            <input type="date" id="return-date" name="return_date" ><br><br>
+
+            <input type="submit" value="Search Flights">
+        </form>
+        <br></br>
+        <br></br>
         <b>Track My Spending:</b><br><br>
 
         <!-- Total spending in the past year -->
         <p>Total amount spent in the past year: <span>{{ spendings_past_year }}</span></p>
+
         
         <!-- Spending within a specified range -->
         <form action="/spending_range" method="POST">
