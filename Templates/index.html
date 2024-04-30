@@ -1,52 +1,65 @@
 <!DOCTYPE html>
-<html>
-  <head>
+<html lang="en">
+<head>
     <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title> Airline Ticket Reservation System </title>
-          <style>
-            body
-            {
-          ound-color: white; /* Set the background color to a light gray */
-            }
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flight Search and Status</title>
+    <style>
+        * {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+        a:hover {
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+    <h1>Flight Information</h1>
+    <section>
+        <h2>Search for Flights</h2>
+        <form action="/search_flights" method="get"> 
+            <label for="source">Source City/Airport:</label>
+            <input type="text" id="source" name="source" required><br><br>
 
-            .login-box, .nonlogin-box
-            {
-              display: inline-block;
-              padding: 10px 20px;
-              border: 2px solid #333;
-              border-radius: 5px;
-              text-decoration: none; /* Remove default underline for links */
-              margin-bottom: 10px;
-              width: 500px; /* the width of the login box is 200 pixels */
-              background-color: lightblue; /* Sets the background color of the login box to light gray */
-              border: 2px solid #ccc;
-            }
+            <label for="destination">Destination City/Airport:</label>
+            <input type="text" id="destination" name="destination" required><br><br>
 
-            .login-text, .nonlogin-text
-            {
-              font-size: 18px; /* Sets the font size of the text to 18 pixels */
-              color: black; /*  Sets the color of the text to a dark gray */
-              margin-bottom: 10px; /* Adds a bottom margin of 10 pixels to create space between the login text and any content below it */
-            }
-            </style>
-  </head>
- 
-  <body>
-    <h1>Air Ticket Reservation System</h1>
-      <p>Welcome to the Air Ticket Reservation System. If you have a username and password, continue by logining in. If you do not, conitnue without logining in </p>
-      <a href="/customer_login_page.html" class="login-box"> <!-- Represents the clickable login box This attribute specifies that when the login box is clicked, the JavaScript function openLoginPage() will be called.
-                                                      This function will handle the action associated with clicking the login box, such as opening a login page. -->
-      <div class="login-text"> Customers: Click here to login </div> <!-- This attribute specifies that when the login box is clicked, the JavaScript function openLoginPage() will be called.
-                                                      This function will handle the action associated with clicking the login box, such as opening a login page. -->
-      </a>
+            <label for="departure-date">Departure Date:</label>
+            <input type="date" id="departure-date" name="departure_date" required><br><br>
 
-      <a href="/airline_staff_login_page.html" class="login-box">
-      <div class="login-text"> Airline Staff: Click here to login </div>                                             
-      </a>
+            <label for="return-date">Return Date(Optional):</label>
+            <input type="date" id="return-date" name="return_date" ><br><br>
 
-      <a href="/main_page.html" class="nonlogin-box">
-      <div class="nonlogin-text"> Click here to continue without logging in </div>
-      </a>
-  </body>
+            <input type="submit" value="Search Flights">
+        </form>
+    </section>
+    <section>
+        <h2>Check Flight Status</h2>
+        <form action="/check_status" method="get">
+            <label for="airline-name">Airline Name:</label>
+            <input type="text" id="airline-name" name="airline_name" required><br><br>
+
+            <label for="flight-number">Flight Number:</label>
+            <input type="text" id="flight-number" name="flight_number" required><br><br>
+
+            <lable for="departure-date"> Departure Date: </lable>
+            <input type="date" id="departure-date" name="departure-date" required><br><br>
+
+            <lable for="arrival-date"> Arrival Date: </lable>
+            <input type="date" id="arrival-date" name="arrival-date" required><br><br>
+
+            <input type="submit" value="Check Status">
+        </form>
+    </section>
+    <a href="registration_for_customer.html">Click here to register as a customer</a><br>
+    <a href="registration_for_airpline_staff.html">Click here to register as an airplane staff</a><br>
+    <a href="airline_staff_login_page.html">Click here to login as a staff</a><br>
+    <a href="customer_login_page.html">Click here to login as a customer</a><br>
+
+
+</body>
 </html>
