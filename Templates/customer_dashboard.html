@@ -25,17 +25,14 @@
         <br></br>
         <h2>Search for flights</h2>
         <form action="/search_flights" method="get"> 
-            <label for="source">Source City/Airport:</label>
-            <input type="text" id="source" name="source" required><br><br>
+            <label for="airline_name">Airlane name:</label>
+            <input type="text" id="airline_name" name="airline_name" required maxlength="20"><br><br>
 
-            <label for="destination">Destination City/Airport:</label>
-            <input type="text" id="destination" name="destination" required><br><br>
+            <label for="flight_number">Flight number:</label>
+            <input type="number" id="flight_number" name="flight_number" required maxlength="5"><br><br>
 
-            <label for="departure-date">Departure Date:</label>
-            <input type="date" id="departure-date" name="departure_date" required><br><br>
-
-            <label for="return-date">Return Date(Optional):</label>
-            <input type="date" id="return-date" name="return_date" ><br><br>
+            <label for="depart_date_time">Depart Date and Time:</label>
+            <input type="datetime-local" id="depart_date_time" name="depart_date_time" required><br><br>
 
             <input type="submit" value="Search Flights">
         </form> 
@@ -43,21 +40,26 @@
 
         <h2>Purchase a Ticket</h2>
         <form action="/purchase_ticket" method="post"> 
-            <label for="source">Source City/Airport:</label>
-            <input type="text" id="source" name="source" required><br><br>
+            <label for="email_address">Email Address:</label>
+            <input type="email" id="email_address" name="email_address" required maxlength="30"><br><br>
 
-            <label for="destination">Destination City/Airport:</label>
-            <input type="text" id="destination" name="destination" required><br><br>
-
-            <label for="departure-date">Departure Date:</label>
-            <input type="date" id="departure-date" name="departure_date" required><br><br>
-
-            <label for="return-date">Return Date(Optional):</label>
-            <input type="date" id="return-date" name="return_date" ><br><br>
-
-            <input type="submit" value="Purchase a Flight">
+            <label for="card_type">Card Type:</label>
+            <input type="text" id="card_type" name="card_type" required maxlength="30"><br><br>
+        
+            <label for="card_number">Card Number:</label>
+            <input type="text" id="card_number" name="card_number" required maxlength="30"><br><br>
+        
+            <label for="name_on_card">Name on Card:</label>
+            <input type="text" id="name_on_card" name="name_on_card" required maxlength="20"><br><br>
+        
+            <label for="expiration_date">Expiration Date:</label>
+            <input type="date" id="expiration_date" name="expiration_date" required><br><br>
+        
+            <input type="submit" value="Purchase Ticket">
         </form> 
-        <br></br>
+        <h2>Rating</h2>
+        <a href="rating.html">Click here to rate </a><br>
+
 
         <h2>Cancel a Trip</h2>
         <form action="/purchase_ticket" method="get"> 
@@ -65,16 +67,6 @@
             <input type="text" id="ticket_id" name="ticket_id" required><br><br>
 
             <input type ="submit" value="Cancel the flight">
-
-        <h2>Give ratings</h2>
-        <form action="/purchase_ticket" method="post"> 
-            <label for="rating">Rating (1 to 10):</label>
-            <input type="range" id="rating" name="rating" min="1" max="10" required oninput="this.nextElementSibling.value = this.value">
-            <output>5</output><br><br>
-            <label for="comments"></label>
-            <textarea id="comments" name="comments" rows="4" cols="50" required placeholder="Enter your comments here..."></textarea><br><br>
-            <input type="submit" value="Rate the flight">
-        <br></br>
         <br></br>
         <b>Track My Spending:</b>
         <!-- Total spending in the past year -->
