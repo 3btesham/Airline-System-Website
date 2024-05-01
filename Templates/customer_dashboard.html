@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Customer Dashboard</title>
+        <style type="text/css">
+            table, th, td {
+                border: 1px solid black;
+                padding-left: 2px;
+                padding-right: 2px;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Welcome, {{ customer['first_name'] }}</h1>
+        <h2>View My flights</h2>
+        <table>
+            {% if future_flights %}
+                {%for flights in future_flights%}
+                <tr>
+                    <td>{{ flight['flight_number'] }}</td>
+                    <td>{{ flight['depart_date'] }}</td>
+                    <td>{{ flight['depart_time'] }}</td>
+                    <td>{{ flight['depart_airport_code'] }}</td>
+                </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="4">Currently, you have no future flights.</td>
+                </tr>
+            {% endif %}
+        </table> 
+        <br></br>
+        <h2>Search for flights</h2>
+        <form action="/search_flights" method="get"> 
+            <label for="airline_name">Airlane name:</label>
+            <input type="text" id="airline_name" name="airline_name" required maxlength="20"><br><br>
+
+            <label for="flight_number">Flight number:</label>
+            <input type="number" id="flight_number" name="flight_number" required maxlength="5"><br><br>
+
+            <label for="depart_date">Depart Date:</label>
+            <input type="date" id="depart_date" name="depart_date" required><br><br>
+            
+            <label for="depart_time">Depart Time:</label>
+            <input type="text" id="depart_time" name="depart_time" pattern="(?:[01]\d|2[0-3]):(?:[0-5]\d):(?:[0-5]\d)" placeholder="HH:MM:SS" required><br><br>
+
+            <input type="submit" value="Search Flights">
+        </form> 
+        <br></br>
+
+        <h2>Purchase a Ticket</h2>
+        <form action="/purchase_ticket" method="post"> 
+            <label for="email_address">Email Address:</label>
+            <input type="email" id="email_address" name="email_address" required maxlength="30"><br><br>
+
+            <label for="card_type">Card Type:</label>
+            <input type="text" id="card_type" name="card_type" required maxlength="30"><br><br>
+        
+            <label for="card_number">Card Number:</label>
+            <input type="text" id="card_number" name="card_number" required maxlength="30"><br><br>
+        
+            <label for="name_on_card">Name on Card:</label>
+            <input type="text" id="name_on_card" name="name_on_card" required maxlength="20"><br><br>
+        
+            <label for="expiration_date">Expiration Date:</label>
+            <input type="date" id="expiration_date" name="expiration_date" required><br><br>
+        
+            <input type="submit" value="Purchase Ticket">
+        </form> 
+        <h2>Rating</h2>
+        <a href="/rating.html">Click here to rate </a><br>
+
+
+        <h2>Cancel a Trip</h2>
+        <form action="/purchase_ticket" method="get"> 
+            <label for="ticket_id">CustomerId to cancel</label>
+            <input type="text" id="ticket_id" name="ticket_id" required><br><br>
+
+            <input type ="submit" value="Cancel the flight">
+        <br></br>
+        <b>Track My Spending:</b>
+        <!-- Total spending in the past year -->
+        <p>Total amount spent in the past year: <span>{{ spendings_past_year }}</span></p>
+        <!-- Spending within a specified range -->
+        <form action="/spending_range" method="POST">
+            <label for="start_date">Start Date:</label>
+            <input type="date" id="start_date" name="start_date">
+            <label for="end_date">End Date:</label>
+            <input type="date" id="end_date" name="end_date">
+            <input type="submit" value="View Spending">
+        </form>
+        
+        <!-- Visualization for spending within the specified range (e.g., bar chart or table) -->
+        
+        <!-- JavaScript to fetch and update spending data -->
+        <script>
+            function fetchPastYearSpending() {
+                // Fetch total spending in the past year
+                fetch('/get_past_year_spending')
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById('past_year_spending').textContent = '$' + data.spendings;
+                    })
+                    .catch(error => console.error('Error fetching spending:', error));
+            }
+        
+            // Call the function when the page loads
+            fetchPastYearSpending();
+        </script>
+
+    <a href="/customer_login_page.html">Logout</a>
+    </body>
+
+</html>
