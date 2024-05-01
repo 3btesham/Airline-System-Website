@@ -7,12 +7,11 @@
         <link rel="stylesheet" href="customer_register_page.css">
     </head>
     <body>
-        <h1> User Registrations</h1>
+        <header>
+        <h1> Registration for Customer</h1>
+        </header>
         <section>
-            <h2> Registration for Customer</h2>
-            <form action="/registration_for_customer.html" method="POST">
-                <label for= "email_address"> Email Address: </label>
-                <input type="email" id="email_address" name="email_address" required maxlength="30"> <br><br>
+            <form action="customer_register_page.html" method="POST">
                 
                 <label for= "first_name"> First Name: </label>
                 <input type="text" id= "first_name" name="first_name" required maxlength="15"> <br><br>
@@ -20,11 +19,14 @@
                 <label for= "last_name"> Last Name: </label>
                 <input type="text" id="last_name" name="last_name" required maxlength="15"> <br><br>
 
+                <label for= "email_address"> Email Address: </label>
+                <input type="email" id="email_address" name="email_address" required maxlength="30"> <br><br>
+
                 <label for= "password"> Password: </label>
                 <input type="password" id="password" name="password" required maxlength="300"> 
                 
                 <div class="address-section">
-                    <h3>Address</h3>
+                    <h2>Address</h2>
                     <label for="building_number">Building Number</label>
                     <input type="number" id="building_number" name="building_number" required>
                 
@@ -45,7 +47,7 @@
                 </div>
 
                 <label for="phone_number">Phone Number:</label>
-                <input type="text" id="phone_number" name="phone_number" maxlength="12" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"> <br><br>
+                <input type="tel" id="phone_number" name="phone_number" maxlength="12" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"> <br><br>
 
                 <label for="passport_number"> Passport Number: </label>
                 <input type="text" id="passport_number" name="passport_number" required maxlength="10"><br><br>
@@ -63,11 +65,8 @@
 
             </form>
         </section>
-        <button onclick="goBack()">Back</button>
-        <script>
-            function goBack() {
-                window.history.back();
-            }
-        </script>
     </body>
+    <footer>
+        <p>&copy; 2024 New Flight. All rights reserved.</p>
+    </footer>
 </html>
