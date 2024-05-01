@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
 # import pymysql.cursors
 import pymysql
+from hashlib import md5
 
 '''
 
@@ -23,10 +24,10 @@ app.secret_key = 'my_secret_key'
 
 # Establish connection to MySQL database
 db = pymysql.connect(host="localhost", 
-                   port = 8889,
+                   port = 3306,
                    user="root", 
-                   password="root", 
-                   database="air_ticket_system", 
+                   password="", 
+                   database="airline_system", 
                    charset="utf8mb4", 
                    cursorclass=pymysql.cursors.DictCursor
 )
@@ -129,13 +130,6 @@ def customer_exists(email_addess):
         return False# erorr occured, couldn't check customer exists
 
 
-
-
-
-
-
-
-
 @app.route('/')
 def index_page():
     # fetch()
@@ -146,7 +140,7 @@ def customer_login_page():
     if request.method == "POST":
         # Retrieve username and password from the form
         email = request.form['email_address']
-        password = request.form['password']
+        password = md5(request.form['password'])
         
         if (authenticate_customer(email, password)):
             session["email"] = email
@@ -157,8 +151,6 @@ def customer_login_page():
     # Redirect back to the login page with an error message
     print("failed authentication")
     return render_template('customer_login_page.html', error=True)
-
-
 
 @app.route('/customer_dashboard.html', methods = ['GET', 'POST'])
 def customer():
@@ -191,9 +183,6 @@ def customer():
 #         email_address = session['email']
 #         cursor = db.cursor()
 
-
-
-
 @app.route('/spending_range', methods=['POST'])
 def spending_range():
     try:
@@ -223,9 +212,197 @@ def spending_range():
     except Exception as e:
         # Handle exceptions
         return "Error: Unable to fetch spending data within the specified range"
+ 
+@app.route('/purchase_ticket', methods = ["POST"])   
+def pay_for_ticket():
+      return
+  
+@app.route('/cancel_ticket', methods = ["POST"])
+def cancel_trip():
+    return
+
+@app.route('/review_flight', methods = ['POST'])
+def review():
+    return
+
+def check_if_flight_exists(airline, flight_num, depart_date, depart_time):
+    curs = db.cursor()
+    query = "SELECT * FROM flight WHERE airline_name = %s AND flight_number = %s AND depart_date = %s AND depart_time = %s"
     
+    try:
+        output = curs.execute(query, (airline, flight_num, depart_date, depart_time))
+        if (output[0] == airline):
+            return True
+        else:
+            return False
+    except:
+        return False
+    
+    
+@app.route('add_flight', methods = ["POST"])
+def create_flight():
+    if (request.method == "POST"):
+        flight_number = request.form.get('flight_number')
+        airline_name = request.form.get('airline_name')
+        departing_airport_code = request.form.get('depart_airport')
+        depart_date = request.form.get('depart_date')
+        depart_time = request.form.get('depart_time')
+        destination_airport_code = request.form.get('destination_airport')
+        arrival_date = request.form.get('arrival_date')
+        arrival_time = request.form.get('arrival_time')
+        base_price = request.form.get('price')
+        status = request.form.get('status')
+        
+        curs = db.cursor()
+        query = "INSERT INTO flight VALUES %s, %s, %s, %s, %s, %s, %s, %s, %s, %s"
+        
+        if not (check_if_flight_exists(airline_name, flight_number, depart_date, depart_time)):
+            curs.execute(query, (airline_name, flight_number, depart_date, depart_time, departing_airport_code, arrival_date, arrival_time, destination_airport_code, base_price, status))
+            db.commit()
+            curs.close()
+            return render_template('airline_staff_dashboard.html')
+        else:
+            curs.close()
+            error = "Flight already exists"
+            return render_template('airline_staff_dashboard.html', error=error)
+    else:
+        return render_template('airline_staff_dashboard.html')
 
+@app.route('change_flight_status', methods = ["POST"])
+def change_flight_status():
+    if (request.method == "POST"):
+        airline_name = request.form.get('airline_name')
+        flight_number = request.form.get('flight_id')
+        depart_date = request.form.get('flight_date')
+        depart_time = request.form.get('flight_time')
+        status = request.form.get('status')
+        
+        curs = db.cursor()
+        query = "UPDATE flight SET status = %s WHERE airline_name = %s AND flight_number = %s AND depart_date = %s AND depart_time = %s"
+        
+        curs.execute(query, (status, airline_name, flight_number, depart_date, depart_time))
 
+def check_airport_exists(code):
+    curs = db.cursor()
+    query = "SELECT * FROM airport WHERE code = %s"
+    
+    try:
+        output = curs.execute(query, (code))
+        if (output[0] == code):
+            return True
+        else:
+            return False
+    except:
+        return False
+
+@app.route('add_airport', methods = ["POST"])
+def add_airport():
+    if (request.method == "POST"):
+        code = request.form.get('airport_code')
+        name = request.form.get('airport_name')
+        city = request.form.get('airport_city')
+        country = request.form.get('airport_country')
+        number_of_terminals = request.form.get('number_of_terminals')
+        type = request.form.get('type')
+        
+        curs = db.cursor()
+        query = "INSERT INTO airport VALUES %s, %s, %s, %s, %s, %s"
+        
+        if not (check_airport_exists):
+            curs.execute(query, (code, name, city, country, number_of_terminals, type))
+            db.commit()
+            curs.close()
+            return render_template('airline_staff_dashboard.html')
+        else:
+            curs.close()
+            error = "Airport already exists!"
+            return render_template('airline_staff_dashboard.html', error = error)
+    else:
+        return render_template('airline_staff_dashboard.html')
+
+def check_airplane_exists(airline_name, id):
+    curs = db.cursor()
+    query = "SELECT * FROM airplane WHERE airline_name = %s AND id = %s"
+    
+    try:
+        output = curs.execute(query, (airline_name, id))
+        if (output[0] == airline_name & output[1] == id):
+            return True
+        else:
+            return False
+    except:
+        return False
+
+#missing maintenance id in airplane sql
+#missing airline name in airline staff dashboard html
+@app.route('add_airplane', methods = ['POST'])
+def add_airplane():
+    if (request.method == "POST"):
+        airline_name = request.form.get('airline_name')
+        id_number = request.form.get('id_number')
+        number_of_seats = request.form.get('num_of_seats')
+        manufacturing_company = request.form.get('manufacturing_company')
+        model_number = request.form.get('model_number')
+        manufacturing_date = request.form.get('manufacturing_date')
+        age = request.form.get('age')
+        
+        curs = db.cursor()
+        query = "INSERT INTO airplane VALUES %s, %s, %s, %s, %s, %s, %s"
+        
+        if not check_airplane_exists(airline_name, id_number):
+            curs.execute(query, (airline_name, id_number, number_of_seats, manufacturing_company, model_number, manufacturing_date, age))
+            db.commit()
+            curs.close()
+            return render_template('airline_staff_dashboard.html')
+        else:
+            curs.close()
+            error = "Airplane already exists!"
+            return render_template('airline_staff_dashboard.html', error=error)
+    else:
+        return render_template('airline_staff_dashboard.html')
+
+def maintenance_exists(id):
+    curs = db.cursor()
+    query = "SELECT * FROM maintenance WHERE id = %s"
+    
+    try:
+        output = curs.execute(query, (id))
+        if (output[0] == id):
+            return True
+        else:
+            return False
+    except:
+        return False
+
+@app.route('schedule_maintenance', methods = ['POST'])
+def schedule_maintenance():
+    if (request.method == "POST"):
+        airline_name = request.form.get('airline_name')
+        airplane_id = request.form.get('airplane_id')
+        
+        id = request.form.get('maintenance_id')
+        start_date = request.form.get('start_date')
+        start_time = request.form.get('start_time')
+        end_date = request.form.get('end_date')
+        end_time = request.form.get('end_time')
+        
+        curs = db.cursor()
+        query1 = "INSERT INTO maintenance VALUES %s, %s, %s, %s, %s"
+        query2 = "UPDATE airplane SET maintenance_id = %s WHERE airlinename = %s AND id_number = %s"
+        
+        if not (maintenance_exists(id)):
+            curs.execute(query1, (id, start_date, start_time, end_date, end_time))
+            curs.execute(query2, (id, airline_name, airplane_id))
+            db.commit()
+            curs.close()
+            return render_template('airline_staff_dashboard.html')
+        else:
+            curs.close()
+            error = "ERROR: Maintenance already exists!"
+            return render_template('airline_staff_dashboard.html', error=error)
+    else:
+        return render_template('airline_staff_dashboard.html')
+    
 @app.route('/view_my_flights', methods = ['POST'])
 def view_my_flights():
     try:
@@ -251,7 +428,7 @@ def view_my_flights():
 def airline_staff_login_page():
     if request.method == "POST":
         username = request.form['username']
-        password = request.form['password']
+        password = md5(request.form['password'])
         print("The username entered is: " + username)
         print("The password entered is: " + password)
     
@@ -265,9 +442,6 @@ def airline_staff_login_page():
     # Redirect back to the login page with an error message
     print("failed authentication")
     return render_template('airline_staff_login_page.html', error=True)
-
-    
-
 
 @app.route('/airline_staff_board.html', methods = ['GET', 'POST'])
 def airline_staff():
@@ -341,7 +515,7 @@ def register_airline_staff():
         last_name = request.form['last_name']
         username = request.form['username']
         email_address = request.form['email_address']
-        password = request.form['password']
+        password = md5(request.form['password'])
         date_of_birth = request.form['date_of_birth']
         phone_number = request.form['phone_number']
         
@@ -398,7 +572,7 @@ def register_customer():
         email_address = request.form["email_address"]
         first_name = request.form["first_name"]
         last_name = request.form["last_name"]
-        password = request.form["password"]
+        password = md5(request.form["password"])
         building_number = request.form["building_number"]
         street = request.form["street"]
         apt_number = request.form["apt_number"]
