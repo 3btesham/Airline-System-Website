@@ -242,19 +242,80 @@ def spending_range():
     
 @app.route('/purchase_ticket', methods = ["POST"])   
 def pay_for_ticket():
-      return
-  
+    if (request.method == "POST"):
+        email_address = session['email']
+        
+        first_name = request.form.get('first_name')
+        last_name = request.form.get('last_name')
+        dob = request.form.get('dob')
+        airline_name = request.form.get('airline_name')
+        flight_number = request.form.get('flight_number')
+        depart_date = request.form.get('depart_date')
+        depart_time = request.form.get('depart_time')
+        card_type = request.form.get('card_type')
+        card_number = md5(request.form.get('card_number').encode()).hexdigest()
+        name_on_card = request.form.get('name_on_card')
+        expiration_date = request.form.get('expiration_date')
+        
+        if (check_if_flight_exists(airline_name, flight_number, depart_date, depart_time)):
+            curs = db.cursor()
+            query1 = "SELECT base_price FROM flight WHERE airline_name = %s AND flight_number = %s AND depart_date = %s AND depart_time = %s"
+            query2 = "SELECT airplane_id FROM flight WHERE airline_name = %s AND flight_number = %s AND depart_date = %s AND depart_time = %s"
+            query3 = "SELECT COUNT(id_number) FROM ticket WHERE airline_name = %s AND flight_number = %s AND depart_date = %s AND depart_time = %s"
+            query4 = "SELECT num_of_seats FROM airplane WHERE id_number = %s AND airline_name = %s"
+            
+            curs.execute(query1, (airline_name, flight_number, depart_date, depart_time))
+            price = curs.fetchall()[0]
+
+            curs.execute(query2, (airline_name, flight_number, depart_date, depart_time))
+            airplane_id = curs.fetchall()[0]
+            
+            curs.execute(query3, (airline_name, flight_number, depart_date, depart_time))
+            num_of_taken_seats = curs.fetchall()[0]
+            
+            curs.execute(query4, (airplane_id, airline_name))
+            num_of_total_seats = curs.fetchall()[0]
+            
+            if (num_of_taken_seats / num_of_total_seats) >= 0.8:
+                price = price *.75
+            
+            query5 = "SELECT COUNT(id_number) FROM ticket"
+            curs.execute(query5)
+            id_number = curs.fetchall()[0]['id_number'] + 100
+            
+            query6 = "INSERT INTO ticket VALUES %s, %s, %s, %s, %s, %s, %s, %s, %s"
+            query7 = "INSERT INTO purchase VALUES %s, %s, CURTIME(), CURDATE(), %s, %s, %s, %s"
+            
+            curs.execute(query6, (id_number, airline_name, flight_number, depart_date, depart_time, price, first_name, last_name, dob))
+            curs.execute(query7, (id_number, email_address, card_type, card_number, name_on_card, expiration_date))
+            
 @app.route('/cancel_ticket', methods = ["POST"])
 def cancel_trip():
-    return
+    if (request.method == "POST"):
+        ticket_id = request.form.get('ticket_id')
+        
+        curs = db.cursor()
+        query1 = "SELECT * FROM Ticket WHERE id_number = %s"
+        
+        curs.execute(query1, (ticket_id))
+        output = curs.fetchall()
+        
+        if (output):
+            query2 = "DELETE FROM Ticket WHERE id_number = %s"
+            query3 = "DELETE FROM Purchase WHERE id_number = %s"
 
-@app.route('/review_flight', methods = ['POST'])
-def review():
-    return
-
-    
-
-
+            curs.execute(query2, (ticket_id))
+            curs.execute(query3, (ticket_id))
+            db.commit()
+            curs.close()
+            
+            return render_template('customer_dashboard.html')
+        else:
+            curs.close()
+            error = "ERROR: Ticket does not exist!"
+            return render_template('customer_dashboard.html', error=error)
+    else:
+        return render_template('customer_dashboard.html')
 
 @app.route('/view_my_flights', methods = ['POST'])
 def view_my_flights():
@@ -423,6 +484,7 @@ def add_flight():
             arrival_time = request.form['arrival_time']
             base_price = request.form['base_price']
             flight_type = request.form['flight_type']
+            airplane_id = request.form['airplane_id']
             
             # first, run a query to get the airline the staff works for
             query = """
@@ -436,10 +498,10 @@ def add_flight():
             if not check_if_flight_exists(airline_name, flight_number, depart_date, depart_time):
                 # now, you have confirmed that Flight is not existant, meaning you can add it to the database
                 query = """
-                INSERT INTO Flight values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                INSERT INTO Flight values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                 """
                 print("about to execute query")
-                cursor.execute(query, (airline_name, flight_number, depart_date, depart_time, departure_airport_code, arrival_date, arrival_time, arrival_airport_code, base_price, flight_type))
+                cursor.execute(query, (airline_name, flight_number, depart_date, depart_time, departure_airport_code, arrival_date, arrival_time, arrival_airport_code, base_price, flight_type, airplane_id))
                 print("executed query")
                 
                 print("about to commit")
@@ -475,7 +537,17 @@ def change_flight_status():
         curs = db.cursor()
         query = "UPDATE flight SET status = %s WHERE airline_name = %s AND flight_number = %s AND depart_date = %s AND depart_time = %s"
         
-        curs.execute(query, (status, airline_name, flight_number, depart_date, depart_time))
+        if (check_if_flight_exists(airline_name, flight_number, depart_date, depart_time)):
+            curs.execute(query, (status, airline_name, flight_number, depart_date, depart_time))
+            db.commit()
+            curs.close()
+            return render_template('airline_staff_dashboard.html')
+        else:
+            curs.close()
+            error = "ERROR: Flight does not exist"
+            return render_template('airline_staff_dashboard.html', error=error)
+    else:
+        return render_template('airline_staff_dashboard.html')
 
 def check_airport_exists(code):
     curs = db.cursor()
