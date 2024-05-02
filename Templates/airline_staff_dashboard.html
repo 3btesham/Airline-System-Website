@@ -1,18 +1,16 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Airline Staff Dashboard</title>
-        <style type="text/css">
-            table, th, td {
-                border: 1px solid black;
-                padding-left: 2px;
-                padding-right: 2px;
-            }
-        </style>
+        <link rel="stylesheet" href="customer_dashboard.css">
+
     </head>
-    
     <body>
+        <header>
         <h1>Welcome, {{airline_name}} employee, {{ staff['first_name'] }}</h1>
+        </header>
             <h2>View My flights</h2>
             <table>
                 {% if future_flights %}
@@ -188,8 +186,11 @@
             <p> Customer Last Name: {{ customer_info['last_name'] }} </p>
             <p> Customer Email: {{ customer_info['email_address'] }} </p>
 
-            <form action="/airline_staff_logout" method="GET">
-                <input type="submit" value="Logout">
-            </form>
     </body>
+    <form action="/airline_staff_logout" method="GET">
+        <input type="submit" value="Logout">
+    </form>
+    <footer>
+        <p>&copy; 2024 New Flight. All rights reserved.</p>
+    </footer>
 </html>
