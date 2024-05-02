@@ -98,4 +98,17 @@ footer a {
     text-decoration: none;
     text-align: center;
     margin: 0 10px; 
+}button {
+    color: black;             /* White text */
+    border: none;             /* No borders */
+    padding: 15px 32px;       /* Padding inside the button */
+    text-align: center;       /* Center-aligned text */
+    text-decoration: none;    /* No underline */
+    display: inline-block;    /* Display type */
+    font-size: 16px;          /* Text size */
+    margin: 4px 2px;          /* Margin around the button */
+    cursor: pointer;          /* Cursor appears as a pointer */
+    border-radius: 8px;       /* Rounded corners */
+    transition: 0.3s;         /* Smooth transition for hover effect */
 }
+
