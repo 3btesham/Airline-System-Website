@@ -80,7 +80,11 @@
                     <input type="text" id="depart_time" name="depart_time" pattern="(?:[01]\d|2[0-3]):(?:[0-5]\d):(?:[0-5]\d)" placeholder="HH:MM:SS" required><br><br>
 
                     <label for="status"> New Status: </label>
-                    <input type="text" id="status" name="status" required><br><br>
+                    <select type="text" id="status" name="status" required><br><br>
+                    <option value="ontime">Ontime</option>
+                    <option value="delayed">Delayed</option>
+                    <option value="cancelled">Cancelled</option>
+                    </select>
 
                     <input type="submit" value="Change Status">
                 </form>
@@ -131,8 +135,10 @@
                     <input type="number" id="number_of_terminals" name="number_of_terminals" required><br><br>
 
                     <label for="type">Type (International/Domestic/Both):</label>
-                    <input type="text" id="type" name="type" required><br><br>
-                    
+                    <select type="text" id="type" name="type" required><br><br>
+                    <option value="domestic">Domestic</option>
+                    <option value="international">International</option>
+                    </select>
                     <input type="submit" value="Add Airport">
                 </form>
             </section>
