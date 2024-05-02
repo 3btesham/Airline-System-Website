@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="index.css">
     <title>Flight Search and Status</title>
     <style>
         * {
@@ -17,19 +16,35 @@
             opacity: 0.5;
         }
     </style>
+    <style>
+        body
+        {
+      ound-color: white; /* Set the background color to a light gray */
+        }
+
+        .login-box, .nonlogin-box
+        {
+          display: inline-block;
+          padding: 10px 20px;
+          border: 2px solid #333;
+          border-radius: 5px;
+          text-decoration: none; /* Remove default underline for links */
+          margin-bottom: 10px;
+          width: 500px; /* the width of the login box is 200 pixels */
+          background-color: lightblue; /* Sets the background color of the login box to light gray */
+          border: 2px solid #ccc;
+        }
+
+        .login-text, .nonlogin-text
+        {
+          font-size: 18px; /* Sets the font size of the text to 18 pixels */
+          color: black; /*  Sets the color of the text to a dark gray */
+          margin-bottom: 10px; /* Adds a bottom margin of 10 pixels to create space between the login text and any content below it */
+        }
+    </style>
 </head>
 <body>
-    <header>
-    <h1>Welcome to New Flight!</h1>
-    <nav>
-        <a href="customer_register_page.html">Register as a Customer</a>
-        <a href="registration_for_airline_staff.html">Register as Airline staff</a>
-        <a href="airline_staff_login_page.html">Login as a Staff</a>
-        <a href="customer_login_page.html">Login as a Customer</a>
-        <a href="rating.html">Rate our flights</a>
-    </nav>
-</header>
-
+    <h1>Flight Information</h1>
     <section>
         <h2>Search for Flights</h2>
         <form action="/search_flights" method="get"> 
@@ -66,9 +81,11 @@
             <input type="submit" value="Check Status">
         </form>
     </section>
-</body>
+    <a href="/registration_for_customer_page.html">Click here to register as a customer</a><br>
+    <a href="/registration_for_airline_staff_page.html">Click here to register as an airplane staff</a><br>
+    <a href="/airline_staff_login_page.html">Click here to login as a staff</a><br>
+    <a href="/customer_login_page.html">Click here to login as a customer</a><br>
 
-<footer>
-    <p>&copy; 2024 New Flight. All rights reserved.</p>
-</footer>
+
+</body>
 </html>
