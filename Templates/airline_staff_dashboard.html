@@ -12,7 +12,7 @@
     </head>
     
     <body>
-        <h1>Welcome, {{ staff['first_name'] }}</h1>
+        <h1>Welcome, {{airline_name}} employee, {{ staff['first_name'] }}</h1>
             <h2>View My flights</h2>
             <table>
                 {% if future_flights %}
@@ -22,6 +22,7 @@
                         <td>{{ elem['depart_date'] }}</td>
                         <td>{{ elem['depart_time'] }}</td>
                         <td>{{ elem['depart_airport_code'] }}</td>
+                        <td>{{ elem['status'] }}</td>
                     </tr>
                     {% endfor %}
                 {% else %}
@@ -34,15 +35,15 @@
                 <h2>Create Flights</h2>
                 <form action="/add_flight" method="POST">
                     <label for="flight_number"> Flight Number: </label>
-                    <input type="text" id="flight_number" name="flight_numbe" required><br><br>
+                    <input type="text" id="flight_number" name="flight_number" required><br><br>
 
-                    <label for="depart_date"> Departure Date: </label>
+                    <label for="depart_date"> Depart Date: </label>
                     <input type="date" id="depart_date" name="depart_date" required><br><br>
 
-                    <label for="depart_time"> Departure Time: </label>
+                    <label for="depart_time"> Depart Time: </label>
                     <input type="text" id="depart_time" name="depart_time" pattern="(?:[01]\d|2[0-3]):(?:[0-5]\d):(?:[0-5]\d)" placeholder="HH:MM:SS" required><br><br>
 
-                    <label for="depart_airport_code"> Departure Airport: </label>
+                    <label for="depart_airport_code"> Depart Airport Code: </label>
                     <input type="text" id="depart_airport_code" name="depart_airport_code" required><br><br>
 
                     <label for="arrival_date"> Arrival Date: </label>
@@ -51,7 +52,7 @@
                     <label for="arrival_time"> Arrival Time: </label>
                     <input type="text" id="arrival_time" name="arrival_time" pattern="(?:[01]\d|2[0-3]):(?:[0-5]\d):(?:[0-5]\d)" placeholder="HH:MM:SS" required><br><br>
 
-                    <label for="arrival_airport_code"> Destination Airport: </label>
+                    <label for="arrival_airport_code"> Arrival Airport Code: </label>
                     <input type="text" id="arrival_airport_code" name="arrival_airport_code"><br><br>
 
                     <label for="base_price"> Base Price: </label>
@@ -60,7 +61,9 @@
                     <label for="status"> Current Status: </label>
                     <input type="text" id="status" name="status"><br><br>
 
-                    
+                    <label for="airplane_id"> Airplane Id: </label>
+                    <input type="text" id="airplane_id" name="airplane_id"><br><br>
+
                     <input type="submit" value="Create Flight">
                 </form>
             </section>
@@ -80,16 +83,14 @@
 
                     <label for="status"> New Status: </label>
                     <input type="text" id="status" name="status" required><br><br>
+
+                    <input type="submit" value="Change Status">
                 </form>
             </section>
 
             <section>
                 <form action="/add_airplane" method="POST">
                     <h2> Add Airplane </h2>
-
-                    <label for="airline_name">Airline Name:</label>
-                    <input type="text" id="airline_name" name="airline_name" required><br><br>
-                    
                     <label for="id_number">Airplane Id:</label>
                     <input type="text" id="id_number" name="id_number" required><br><br>
 
@@ -102,8 +103,8 @@
                     <label for="model_number">Model Number:</label>
                     <input type="number" id="model_number" name="model_number" required><br><br>
 
-                    <label for="depart_date">Depart Date:</label>
-                    <input type="date" id="depart_date" name="depart_date" required><br><br>
+                    <label for="manufacturing_date">Manufacturing Date:</label>
+                    <input type="date" id="manufacturing_date" name="manufacturing_date" required><br><br>
 
                     <label for="age">Age:</label>
                     <input type="number" id="age" name="age" required><br><br>
@@ -113,7 +114,7 @@
             </section>
 
             <section>
-                <form action="/add_airplane" method="POST">
+                <form action="/add_airport" method="POST">
                     <h2>Add New Airport</h2>
 
                     <label for="code">Airport Code:</label>
@@ -160,8 +161,6 @@
 
             <form action="/schedule_maintenance" method="POST">
                 <h2>Schedule Airplane Maintenance</h2>
-                <label for="airline_name">Airline Name:</label>
-                <input type="text" id="airline_name" name="airline_name" required><br><br>
 
                 <label for="airplane_id">Airplane ID:</label>
                 <input type="text" id="airplane_id" name="airplane_id" required><br><br>
