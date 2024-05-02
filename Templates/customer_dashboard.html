@@ -1,17 +1,15 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Customer Dashboard</title>
-        <style type="text/css">
-            table, th, td {
-                border: 1px solid black;
-                padding-left: 2px;
-                padding-right: 2px;
-            }
-        </style>
+        <link rel="stylesheet" href="customer_dashboard.css">
     </head>
     <body>
+        <header>
         <h1>Welcome, {{ customer['first_name'] }}</h1>
+        </header>
         <h2>View My flights</h2>
         <table>
             {% if future_flights %}
@@ -32,7 +30,7 @@
         </table> 
         <br></br>
         <h2>Search for flights</h2>
-        {% if found_flight %}
+        <p>{% if found_flight %}</p>
         <tr>
             <td>{{ found_flight[0]['flight_number'] }}</td>
             <td>{{ found_flight[0]['depart_date'] }}</td>
@@ -98,10 +96,7 @@
         
             <input type="submit" value="Purchase Ticket">
         </form> 
-        <h2>Rating</h2>
-        <a href="/rating.html">Click here to rate </a><br>
-
-
+    
         <h2>Cancel a Trip</h2>
         <form action="/cancel_ticket" method="POST"> 
             <label for="ticket_id">Enter Ticket ID to Cancel: </label>
@@ -122,19 +117,25 @@
             <input type="date" id="end_date" name="end_date">
             <input type="submit" value="View Spending">
         </form>
-        {% if range_spending %}
+        <p>{% if range_spending %}</p>
         <tr>
             <p>From <td>{{start_date}}</td> to <td>{{end_date}}</td>, your total spending was $<td>{{range_spending}}</td> </p>
         </tr>
+        <p>
         {% endif %}
+        </p>
         
         <!-- Visualization for spending within the specified range (e.g., bar chart or table) -->
         
         <!-- JavaScript to fetch and update spending data -->
-
+<p><a href="rating.html" class="button-link">Before you leave, please give us a rate!</a></p>
+s
     <form action="/customer_logout" method="GET">
         <input type="submit" value="Logout">
     </form>
+    <footer>
+        <p>&copy; 2024 New Flight. All rights reserved.</p>
+    </footer>
     </body>
 
 </html>
