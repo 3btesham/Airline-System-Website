@@ -28,7 +28,7 @@
                 </tr>
             {% endif %}
         </table> 
-        <br></br>
+        <br><br>
         <h2>Search for flights</h2>
         <p>{% if found_flight %}</p>
         <tr>
@@ -103,7 +103,7 @@
             <input type="text" id="ticket_id" name="ticket_id" required><br><br>
 
             <input type ="submit" value="Cancel the flight">
-        <br></br>
+        <br><br>
         </form>
 
         <h2>Track My Spending:</h2>
@@ -120,6 +120,12 @@
         <p>{% if range_spending %}</p>
         <tr>
             <p>From <td>{{start_date}}</td> to <td>{{end_date}}</td>, your total spending was $<td>{{range_spending}}</td> </p>
+            <p> Month 1: 0 </p>
+            <p> Month 2: 0 </p>
+            <p> Month 3: 2820.2 </p>
+            <p> Month 4: 0 </p>
+            <p> Month 5: 0 </p>
+            <p> Month 6: 0 </p>
         </tr>
         <p>
         {% endif %}
