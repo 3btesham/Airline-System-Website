@@ -42,24 +42,18 @@ db = pymysql.connect(host="localhost",
 # Function to check whether the customer exists in the databse, used when logging in
 def authenticate_customer(email_address_in, password_in):
     cursor = db.cursor()
-    # query = "SELECT * FROM Customer WHERE Customer.email_address = %s and Customer.password = %s"
     query = "SELECT * FROM Customer WHERE Customer.email_address = %s"
     try:
-        # cursor.execute(query, (email_address_in, password_in))
         cursor.execute(query, email_address_in)
-        # print("right after executing")
         output = cursor.fetchall() # use .fetchone() becauause the query should only return one row, and not multipe rows
         # Note; type(output) is a list of length (only supports index 0). In this index is a dictionary of the row retrieved) output[0] to access dictionary,
         # output[0]["key_name"] to access the value in that key
         cursor.close()
         if output[0]["email_address"] == email_address_in and output[0]["password"] == password_in: # If the password_in matches the one retrieved # and output[0]["email_address"] == email_address_in: # if the email and password matches
-            print("password fecthed matches the password in")
-            print("email fecthed matches the email in")
             return True # return true
         if output[0]["email_address"] == email_address_in: # if only the email_address_in matches the one retrieved, account exists but wrong password
             # email exists, but password does not match what's stored in the database
             flash("Incorrect Password") # displays a temporary message for the user to see
-            print("password fecthed does not match")
             return False
         # Do not create a case for (output[0]["password"] == password_in)
         return False
@@ -67,7 +61,6 @@ def authenticate_customer(email_address_in, password_in):
     except Exception:
         flash("Incorrect Email")
         flash("Incorrect Password")
-        print("inside exception for authenticate_customer()")
         return False # return False
 
 
@@ -75,20 +68,12 @@ def authenticate_customer(email_address_in, password_in):
 def authenticate_airline_staff(username_in, password_in):
     cursor = db.cursor()
     query = "SELECT * FROM Airline_Staff WHERE username = %s"
-    print("The username inside authenticate airline staff is: " + username_in)
-    print("The password inside authenticate airline staff is: " + password_in)
     
     try:
-        print("inside try")
         cursor.execute(query, username_in)
         output = cursor.fetchall() # use .fetchone() becauause the query should only return one row, and not multipe rows
-        print("after fetching")
         cursor.close()
-        print("before checking")
-        print(output)
 
-        print("Password fetched is: " + output[0]["password"])
-        print("Username Fetched is: " + output[0]["username"])
         if output[0]["password"] == password_in: # if the password matches
             return True # return true
         if output[0]["username"] == username_in:# if only the username_in matches the one retrieved, account exists but wrong password
@@ -152,7 +137,6 @@ def customer_login_page():
     
     # Authentication failed or method not POST
     # Redirect back to the login page with an error message
-    print("failed authentication")
     return render_template('customer_login_page.html', error=True)
 
 
@@ -176,8 +160,6 @@ def customer():
         # DATE_SUB(CURRENT_DATE(), INTERVAL 1 YEAR)
         cursor.execute(query, email_address)
         user_spending = cursor.fetchall()[0]['sum(Ticket.sold_price)']
-        print("about to print user spending")
-        print(user_spending)
         
         query = """
         SELECT ticket.id_number, ticket.airline_name, ticket.flight_number, ticket.depart_date, ticket.depart_time 
@@ -192,14 +174,7 @@ def customer():
 
     except Exception:
         message = 'Please Login or Create an Account'
-        #print("inside exception for customer()")
         return render_template('customer_login_page.html', error=message)
-    
-# @app.route('/get_past_year_spending', methods=['POST'])
-# def past_year_spending():
-#     try:
-#         email_address = session['email']
-#         cursor = db.cursor()
 
 
 @app.route('/search_flights', methods = ['GET'])
@@ -369,24 +344,14 @@ def airline_staff_login_page():
     if request.method == "POST":
         username = request.form['username']
         password = md5(request.form['password'].encode()).hexdigest()
-        print("The username entered is: " + username)
-        print("The password entered is: " + password)
     
         if (authenticate_airline_staff(username, password)):
-            print("passed authenitcation")
             session["username"] = username
-            if 'username' in session:
-                print("inside if")
-                print('username is in session')
-                print(session)
-            else:
-                print("never ran if")
             return redirect(url_for('airline_staff'))  # successful login, change url to load the airline staff page
             # return render_template('/airline_staff_board.html')
     
     # Authentication failed or method not POST
     # Redirect back to the login page with an error message
-    print("failed authentication")
     return render_template('airline_staff_login_page.html', error=True)
 
     
@@ -456,13 +421,7 @@ def airline_staff():
         return render_template('airline_staff_dashboard.html', staff = user_data[0], airline_name = airline_name, future_flights = output2, reviews = reviews, ticket_count = ticket_count, customer_info = customer_info)
     
     except:
-        # print("in except but rendering properly")
-        # return render_template('airline_staff_dashboard.html')
-        # return render_template('airline_staff_dashboard.html')
-        print("inside except")
-        print("Exception occurred: ", str(Exception))
         message = 'Please Login or Create an Account'
-        print("inside except but, rendering staff dashboard")
         # return render_template('airline_staff_dashboard.html', user_data = user_data[0], airline_name = airline_name, future_flights = output2)
         return render_template('airline_staff_login_page.html', error=message)
 
@@ -473,7 +432,6 @@ def check_if_flight_exists(airline, flight_num, depart_date, depart_time):
     try:
         output = curs.execute(query, (airline, flight_num, depart_date, depart_time))
         output = curs.fetchall()
-        print(output)
         if output:
             return True
         else:
@@ -494,7 +452,7 @@ def create_flight():
         base_price = request.form.get('base_price')
         status = request.form.get('status')
         airplane_id_number = request.form.get('airplane_id')
-        print(session)
+        
         curs = db.cursor()
         query1 = "INSERT INTO flight VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
         
@@ -532,13 +490,11 @@ def change_flight_status():
         airline_name = output[0]["airline_name"]
                 
         if (check_if_flight_exists(airline_name, flight_number, depart_date, depart_time)):
-            print("YOOOO")
             curs.execute(query1, (status, airline_name, flight_number, depart_date, depart_time))
             db.commit()
             curs.close()
             return redirect(url_for('airline_staff'))
         else:
-            print("KYS")
             curs.close()
             error = "ERROR: Flight does not exist"
             return redirect(url_for('airline_staff'))
@@ -691,7 +647,6 @@ def ratings():
 @app.route('/submit_rating', methods=['POST'])
 def submit_ratings():
     if request.method == 'POST':
-        print("retrieving from form")
         # Retrieve form data
         email_address = session['email']
         airline_name = request.form['airline_name']
@@ -700,19 +655,9 @@ def submit_ratings():
         depart_time = request.form['depart_time']
         rating = request.form['rating']
         comments = request.form['comments']
-        print("finished retrieving")
         cursor = db.cursor()
-        print("the email address passed in is")
-        print(email_address)
-        print(session)
         if 'email' not in session:
-            print("current email_address not in session")
-            print(type(session))
-            print(len(session))
-            print(session)
-            print("You cannot enter an email other than your own")
             return redirect(url_for('customer'))
-        print('email is in session, proceed to query')
         query = """
         SELECT * 
         FROM Flight 
@@ -721,28 +666,20 @@ def submit_ratings():
         cursor.execute(query, (airline_name, flight_number, depart_date, depart_time))
 
         output = cursor.fetchall()
-        print(output)
         
         if not output: # query returned nothing, meaning flight doesnt exist
-            print("Invalid Flight")
             return render_template('rating.html')
         
         query = """
         INSERT INTO Reviews (email_address, airline_name, flight_number, depart_date, depart_time, rating, comment) values (%s, %s, %s, %s, %s, %s, %s)
         """
-        print("about to execute query")
         cursor.execute(query, (email_address, airline_name, flight_number, depart_date, depart_time, rating, comments))
-        print("executed query")
         
-        print("about to commit")
         db.commit()
-        print("about to close")
         cursor.close()
         
-        print("Rating Submitted Successfully")
         return redirect(url_for('customer'))
      
-    print("never been in if")   
     return redirect(url_for('customer'))
             
 @app.route("/registration_for_airline_staff_page.html", methods = ["GET", "POST"])
@@ -798,8 +735,6 @@ def register_customer():
         passport_country = request.form.get('passport_country')
         dob = request.form.get('date_of_birth')
         
-        print('DAWG')
-
         curs = db.cursor()
         query1 = "INSERT INTO customer VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
         query2 = "INSERT INTO customerphone VALUES (%s, %s)"
@@ -830,7 +765,7 @@ def airline_staff_logout():
     # Clear the session data
     session.pop('username', None)
     # Redirect to the airline staff login page
-    return redirect(url_for('airline_staff_login_page'))
+    return render_template('index.html')
         
 if __name__ == '__main__':
     app.run('127.0.0.1', 5000, debug = True)
